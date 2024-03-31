@@ -4,17 +4,17 @@
 typedef struct Test
 {
     int data;
-    struct Test *next;
+    struct Test *prev, *next;
 } Node;
 
-Node *first, *last; // Global pointers to the first and last nodes of the list
+Node *first, *last;
 
-// Function prototypes
 Node *createNode(int);
 void addAtBeg(int);
 void addAtEnd(int);
 void disp();
 void printForward();
+void printReverse();
 void deleteAtData(int);
 
 int main()
@@ -27,7 +27,7 @@ int main()
         addAtEnd(200 + i + 1);
     }
     disp();
-    ///*
+
     deleteAtData(100);
     printf("After deleting 100\n");
     disp();
@@ -40,8 +40,6 @@ int main()
     deleteAtData(1000);
     printf("After deleting 1000\n");
     disp();
-
-    //*/
 }
 
 Node *createNode(int num)
@@ -50,7 +48,7 @@ Node *createNode(int num)
     if (New != NULL)
     {
         New->data = num;
-        New->next = NULL;
+        New->prev = New->next = NULL;
     }
     return New;
 }
@@ -61,13 +59,12 @@ void addAtBeg(int num)
     if (first == NULL)
     {
         first = last = New;
-        New->next = New;
     }
     else
     {
+        first->prev = New;
         New->next = first;
         first = New;
-        last->next = first;
     }
 }
 
@@ -77,46 +74,92 @@ void addAtEnd(int num)
     if (first == NULL)
     {
         first = last = New;
-        New->next = New;
     }
     else
     {
+        New->prev = last;
         last->next = New;
         last = New;
-        last->next = first; // Adjust the next pointer of the last node to point back to the first node
     }
 }
 
 void disp()
 {
-    printf("Printing the Linked List:\n");
+    printf("Forward: ");
     printForward();
-    /*
     printf("Reverse: ");
     printReverse();
-    */
     printf("\n-------------------------------\n");
 }
 
 void printForward()
 {
     Node *temp = first;
-    if (temp != NULL)
+    while (temp != NULL)
     {
-        while (temp->next != first)
-        {
-            printf("%d ", temp->data);
-            temp = temp->next;
-        }
         printf("%d ", temp->data);
-    }
-    else
-    {
-        printf("Empty List");
+        temp = temp->next;
     }
     printf("\n");
 }
 
+void printReverse()
+{
+    Node *temp = last;
+    while (temp != NULL)
+    {
+        printf("%d ", temp->data);
+        temp = temp->prev;
+    }
+    printf("\n");
+}
+
+// Class CODE
+
+// void deleteAtData(int data)
+// {
+//     if (first == NULL)
+//     {
+//         printf("Nothing to delete! Returning...\n");
+//         return;
+//     }
+//     Node *temp = first;
+//     Node *temp_prev = NULL;
+//     while (temp != NULL && temp->data != data)
+//     {
+//         temp_prev = temp;
+//         temp = temp->next;
+//     }
+//     if (temp == NULL)
+//     {
+//         printf("That data does not exist! Returning...\n");
+//         return;
+//     }
+//     else if (temp_prev == NULL)
+//     {
+//         temp->next->prev = NULL;
+//         first = temp->next;
+//         temp->next = NULL;
+//     }
+//     else if (temp->next == NULL)
+//     {
+//         temp_prev->next = NULL;
+//         temp->next = NULL;
+//         temp->prev = NULL;
+//         last = temp_prev;
+//     }
+//     else
+//     {
+//         temp->next->prev = temp_prev;
+//         temp_prev->next = temp->next;
+//         temp->next = NULL;
+//         temp->prev = NULL;
+//     }
+//     free(temp);
+// }
+
+
+// GPT CODE
 void deleteAtData(int data)
 {
     if (first == NULL)
@@ -124,35 +167,39 @@ void deleteAtData(int data)
         printf("Nothing to delete! Returning...\n");
         return;
     }
-    Node *temp = first->next;
-    Node *temp_prev = first;
-
-    while (temp != first && temp->data != data)
+    Node *temp = first;
+    Node *temp_prev = NULL;
+    while (temp != NULL && temp->data != data)
     {
         temp_prev = temp;
         temp = temp->next;
     }
-    if (temp == first && temp->data != data)
+    if (temp == NULL)
     {
         printf("That data does not exist! Returning...\n");
         return;
     }
-    else if (temp == first)
+    else if (temp_prev == NULL)
     {
-        last->next = temp->next;
         first = temp->next;
-        temp->next = NULL;
+        if (first != NULL)
+        {
+            first->prev = NULL; // Update prev pointer of new first node
+        }
+        else
+        {
+            last = NULL; // If list becomes empty after deletion
+        }
     }
-    else if (temp == last)
+    else if (temp->next == NULL)
     {
-        temp_prev->next = first;
+        temp_prev->next = NULL;
         last = temp_prev;
-        temp->next = NULL;
     }
     else
     {
+        temp->next->prev = temp_prev;
         temp_prev->next = temp->next;
-        temp->next = NULL;
     }
     free(temp);
 }
