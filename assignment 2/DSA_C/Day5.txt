@@ -1,0 +1,47 @@
+day5:
+======================================
+
+linux binary executable: .elf format
+e = executable
+l = linkable
+f = format
+
+windows have a different executable file format.
+C compiler has to generate different executable for different platforms.
+Therefore it is said that C is a platform dependent language.
+
+Incase "ulimit -c" command does not work, use:
+$gcc -g filename.c
+$gdb -q a.out
+
+Once gdb shell opens start debugging main by typing:
+b main
+r
+
+Then just type:
+n
+
+to jump to next breakpoint (line by line),
+eventually you will reach the line that gives the segfault
+
+Linked List...
+creating Two/Multiple lists
+Taking input from string
+Taking input from files
+
+Introduction to Doubly Linked List
+Intro to circular singly/Doubly Linked List.
+
+
+Why do we need Circular Linked Lists?
+
+In production ready code, we want to reduce the chances of runtime errors.
+deferencing a pointer pointing to NULL will give segfault.
+eg: 
+ptr = NULL; 
+(*ptr) => segfault
+
+
+
+
+

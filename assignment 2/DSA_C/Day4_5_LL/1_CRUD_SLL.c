@@ -8,7 +8,7 @@ struct Employee
     int id;               // Employee ID
     char name[25];        // Employee name
     double salary;        // Employee salary
-    struct Employee *ptr; // Pointer to the next employee node
+    struct Employee *ptr; // Pointer to the next employee node//next pointer 
 };
 
 // Define an alias 'Node' for struct Employee using typedef
@@ -130,9 +130,9 @@ void deleteAtPosition(int position)
     }
     Node *temp_prev = NULL;
     Node *temp = first;
-    int currentPosition = 1;
+    int currentPosition = 0;
     // Traverse the list to find the node before the one to be deleted
-    while (temp->ptr != NULL && currentPosition < position)
+    while (temp->ptr != NULL && currentPosition < position-1)
     {
         temp_prev = temp;
         temp = temp->ptr;
